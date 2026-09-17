@@ -1,0 +1,14 @@
+state,temp_c,humidity_pct,annual_rainfall_mm,peak_monsoon_rain_mm_hr,historical_cloudburst_24h_mm
+Kamrup Metropolitan,31.5,78,1720,24.0,185.0
+Papum Pare,28.2,86,2450,48.0,320.0
+East Khasi Hills,21.0,92,2350,65.0,490.0
+Tawang,14.5,82,1890,35.0,220.0
+Sonitpur,30.8,80,1940,26.0,210.0
+Nagaon,31.2,79,1680,22.0,195.0
+Cachar,30.5,85,3100,42.0,285.0
+Aizawl,25.4,88,2800,52.0,340.0
+Dimapur,31.0,81,1750,32.0,215.0
+Kohima,22.8,89,2100,46.0,290.0
+Imphal West,26.5,83,1550,28.0,205.0
+West Tripura,31.8,80,2200,36.0,240.0
+East Sikkim,19.5,91,3400,58.0,380.0

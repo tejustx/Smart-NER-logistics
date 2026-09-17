@@ -1,0 +1,622 @@
+================================================================================
+SMART NER LOGISTICS CONTROL PLATFORM
+COMPLETE FRONTEND TECHNICAL REFERENCE & ARCHITECTURE DOCUMENTATION
+================================================================================
+Application: Smart NER Logistics Control & Crisis Management Platform
+Location: /frontend/ (index.html, css/style.css, js/app.js, js/offline_sync.js)
+Frontend Stack: Semantic HTML5, Vanilla JavaScript (ES6+), Modern CSS3 Tokens,
+                MapLibre GL JS v4 (WebGL 3D), Leaflet.js (Fallback), Web Storage
+Document Version: 1.0 (Production Release)
+
+--------------------------------------------------------------------------------
+TABLE OF CONTENTS
+--------------------------------------------------------------------------------
+1. Frontend Overview & Design Philosophy
+2. File Structure & Inventory
+3. Design System & CSS Theming Engine
+   3.1 Token Hierarchy (Dark Theme & Quick-Commerce Light Theme)
+   3.2 Glassmorphism & Elevation System
+   3.3 Typography & Color Accents
+4. Dual Theme Engine (Light vs Dark)
+   4.1 Blinkit / Zepto / Zomato / Swiggy Inspired Light Theme
+   4.2 Himalayan Night Ops Dark Theme
+   4.3 Zero-FOUT Theme Initialization & Persistence
+5. Screen-by-Screen Architecture (8 Operational Screens)
+   5.1 Authentication Portal (Login & Signup)
+   5.2 Screen 1: Executive Operations Dashboard
+   5.3 Screen 2: Freight & Shipment Planning
+   5.4 Screen 3: USP 1 - Terrain Risk & Route Analysis
+   5.5 Screen 4: USP 2 - Multi-Tier Cargo Allocation (Knapsack)
+   5.6 Screen 5: Convoy Assignment & Driver Dispatch
+   5.7 Screen 6: USP 3 - Driver Field HUD (Offline-First Execution)
+   5.8 Screen 7: Landslide & Weather Disruption Alerts
+   5.9 Screen 8: USP 4 - Regional Situational Oversight & What-If Simulator
+   5.10 Security & Credentials Vault Modal
+6. Mapping Engine: MapLibre GL JS v4 Architecture
+   6.1 Zero-Token Open Architecture
+   6.2 Dual Basemap Synchronization (CartoDB Dark Matter vs Voyager)
+   6.3 3D Perspective Controls (Pitch & Bearing)
+   6.4 Dynamic Vector GeoJSON Layers (Route A vs Route B)
+   6.5 Pulsing Landslide Radar Markers & State Hub Pins
+7. Client-Side State Management (appState)
+8. Offline-First Synchronization Engine (OfflineSyncManager)
+   8.1 Write-Ahead-Log (WAL) Queueing in LocalStorage
+   8.2 Optimistic UI Updates
+   8.3 Reconnection Detection & Batch Replay
+9. JavaScript Function Directory & API Integration Matrix
+10. CSS Class & Component Reference Guide
+
+================================================================================
+1. FRONTEND OVERVIEW & DESIGN PHILOSOPHY
+================================================================================
+The frontend is engineered as a high-performance, zero-framework Single-Page
+Application (SPA) designed to operate under low-bandwidth, high-latency, and
+cellular dead-zone conditions across the North Eastern Region of India.
+
+Core Design Tenets:
+1. Zero Framework Overhead: Built with pure Vanilla JS (ES6+) and modern CSS3,
+   achieving sub-50ms render times and eliminating large bundle dependencies.
+2. Resilience First: All critical operational features (telemetry logging,
+   manifest verification, checkpoint progression) execute locally when the
+   driver enters mountain dead-zones.
+3. Dual-Personality Visuals:
+   - Himalayan Night-Ops (Dark Theme): High-contrast tactical HUD aesthetic
+     using deep slates (#0a0f1d, #0f172a), glowing cyan/emerald vector trails,
+     and pulsing radar alerts.
+   - Quick-Commerce Daylight Mode (Light Theme): Crisp, elevated pure-white cards
+     (#ffffff), soft off-white canvas (#f4f6f8), deep charcoal typography
+     (#0f172a), and vibrant delivery accents inspired by Blinkit, Zepto,
+     Zomato, and Swiggy.
+4. Zero-Token Hardware-Accelerated 3D Mapping: MapLibre GL JS v4 renders
+   vector lines, 3D terrain angles (45° pitch), and interactive popups with
+   100% open-source CartoDB raster tiles requiring no third-party keys.
+
+================================================================================
+2. FILE STRUCTURE & INVENTORY
+================================================================================
+frontend/
+├── index.html        (1,393 lines / ~70 KB)
+│   ├── Inline zero-latency theme initializer (<head>)
+│   ├── Inline authentication & account switcher controller (<script>)
+│   ├── Authentication Portal (#auth-screen) with Login & Signup panes
+│   ├── Top Sticky Navigation Bar (.top-navbar) with Theme Switcher
+│   ├── Collapsible Operational Sidebar (.sidebar)
+│   ├── 8 Screen Containers (.screen)
+│   ├── Credentials Vault Modal (#credentials-vault-modal)
+│   └── Toast notification mount (#toast-container)
+│
+├── css/style.css     (2,146 lines / ~46 KB)
+│   ├── Design system CSS custom properties (:root & [data-theme="light"])
+│   ├── Global resets, scrollbars, and body layouts
+│   ├── Top navigation bar & role switcher styles
+│   ├── Sidebar navigation & active link indicator states
+│   ├── Glassmorphic panels (.glass-panel) and card containers
+│   ├── Form controls, inputs, select dropdowns, and button classes
+│   ├── Data tables (.custom-table & .vault-table)
+│   ├── Route comparison cards (USP 1)
+│   ├── Capacity utilization progress bars (USP 2)
+│   ├── Driver HUD, checkpoint badges, and dead-zone banner (USP 3)
+│   ├── Regional control widgets & What-If simulator (USP 4)
+│   ├── MapLibre GL JS custom popups and glowing circular markers
+│   ├── Theme toggle buttons (.theme-toggle-btn & .auth-floating-theme-btn)
+│   └── Complete Light Theme component override block
+│
+├── js/app.js         (1,601 lines / ~60 KB)
+│   ├── Central state store (appState)
+│   ├── Theme controller (initTheme, toggleTheme, setTheme)
+│   ├── MapLibre GL JS engine (initRouteMap, initGovMap, renderMapLibreRoutes)
+│   ├── Dual tile style definitions (MAPLIBRE_DARK_STYLE & MAPLIBRE_LIGHT_STYLE)
+│   ├── Client-side screen router (navigateToScreen)
+│   ├── User authentication handlers (performLogin, handleSignupSubmit, handleLogout)
+│   ├── Credentials vault loader & clipboard exporters
+│   ├── Role switcher (switchRole)
+│   ├── Connectivity mode toggle (toggleConnectivity)
+│   ├── Screen loaders for Dashboard, Planning, Routes, Allocation, Trips, Gov
+│   ├── Judge Demo automated step runner (runJudgeDemoStep)
+│   └── Global window bindings
+│
+└── js/offline_sync.js (152 lines / ~4.6 KB)
+    ├── OfflineSyncManager class
+    ├── LocalStorage persistent storage keys
+    ├── Offline action queue builder (recordDriverAction)
+    ├── Local optimistic cache mutator (cacheTrip, getCachedTrip)
+    └── Batch reconnection telemetry dispatcher (flushSyncQueue)
+
+================================================================================
+3. DESIGN SYSTEM & CSS THEMING ENGINE
+================================================================================
+
+--------------------------------------------------------------------------------
+3.1 TOKEN HIERARCHY
+--------------------------------------------------------------------------------
+CSS Custom Properties are partitioned into Dark Theme (:root) and Light Theme
+([data-theme="light"]):
+
+Token Name             Dark Theme Value                Light Theme Value (Blinkit/Zepto)
+--------------------------------------------------------------------------------
+--bg-primary           #0a0f1d (Deep Space Navy)       #f4f6f8 (Clean Warm Off-White)
+--bg-secondary         #0f172a (Slate 900)             #ffffff (Pure White Elevated)
+--bg-tertiary          #1e293b (Slate 800)             #edf2f7 (Subtle Grey Fill)
+--bg-card              rgba(15, 23, 42, 0.75)          #ffffff (Opaque Card Surface)
+--bg-card-hover        rgba(30, 41, 59, 0.85)          #f8fafc (Soft Grey Hover)
+--bg-glass             rgba(255, 255, 255, 0.03)       rgba(255, 255, 255, 0.92)
+--border-subtle        rgba(255, 255, 255, 0.08)       #e2e8f0 (Slate 200 Border)
+--border-focus         #00f2fe (Electric Cyan)         #0284c7 (Sky Blue Focus)
+--border-glass         rgba(255, 255, 255, 0.12)       #e2e8f0
+--text-main            #f8fafc (Slate 50)              #1e293b (Slate 800 Charcoal)
+--text-bright          #ffffff (Pure White)            #0f172a (Deep Slate 900)
+--text-muted           #94a3b8 (Slate 400)             #475569 (Slate 600)
+--text-dim             #64748b (Slate 500)             #64748b (Slate 500)
+--accent-cyan          #00f2fe (Electric Cyan)         #0284c7 (Deep Cyan)
+--accent-emerald       #10b981 (Neon Emerald)          #0c831f (Blinkit Delivery Green)
+--accent-amber         #f59e0b (Amber Warning)         #d97706 (Zomato/Swiggy Orange)
+--accent-rose          #f43f5e (Rose Hazard)           #e11d48 (Delivery Alert Red)
+--shadow-lg            0 10px 30px rgba(0,0,0,0.6)     0 10px 25px rgba(0,0,0,0.07)
+--shadow-glow          0 0 20px var(--accent-cyan-glow) 0 0 18px rgba(12,131,31,0.16)
+--navbar-bg            rgba(10, 15, 29, 0.85)          rgba(255, 255, 255, 0.94)
+--table-header-bg      rgba(15, 23, 42, 0.9)           #f8fafc
+--input-bg             #0f172a                         #ffffff
+
+--------------------------------------------------------------------------------
+3.2 GLASSMORPHISM & ELEVATION SYSTEM
+--------------------------------------------------------------------------------
+- Backdrop Filters: Used on .glass-panel, .top-navbar, and modal overlays
+  (-webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px)).
+- Border Layering: Subtle 1px solid border tokens give crisp outline definition.
+- Multi-layer Shadows:
+  * Dark Theme: Deep ambient occlusion (rgba(0,0,0,0.6)) paired with neon accent glows.
+  * Light Theme: Soft multi-stop elevation (0 10px 25px -5px rgba(0,0,0,0.07),
+    0 4px 6px -4px rgba(0,0,0,0.03)) reproducing the signature Zepto/Swiggy card look.
+
+--------------------------------------------------------------------------------
+3.3 TYPOGRAPHY HIERARCHY
+--------------------------------------------------------------------------------
+- Display Font: 'Outfit', sans-serif (weights 600, 700, 800) for headers and metrics.
+- Body Font: 'Inter', sans-serif (weights 400, 500, 600) for UI copy and tables.
+- Monospace Font: 'JetBrains Mono', monospace for IDs, coordinates, PBKDF2 hashes.
+
+================================================================================
+4. DUAL THEME ENGINE (LIGHT VS DARK)
+================================================================================
+
+--------------------------------------------------------------------------------
+4.1 BLINKIT / ZEPTO / ZOMATO / SWIGGY INSPIRED LIGHT THEME
+--------------------------------------------------------------------------------
+Activated via data-theme="light" on <html>:
+- Background: Soft, warm off-white canvas (#f4f6f8) with subtle radial tints.
+- Elevated Cards: Pure white (#ffffff) .glass-panel cards with delicate #e2e8f0
+  borders and soft drop-shadows.
+- High Legibility: Deep slate (#0f172a) titles and dark charcoal (#1e293b) body text.
+- Vibrant Accents:
+  * Safe Route B: #0c831f (Blinkit delivery green).
+  * High-Risk Route A: #e11d48 (Delivery alert red).
+  * Choke points / Warnings: #d97706 (Swiggy/Zomato warm orange).
+- Inputs & Tables: White inputs with crisp #cbd5e1 borders and focus highlights;
+  tables with #f8fafc headers and smooth hover rows.
+
+--------------------------------------------------------------------------------
+4.2 HIMALAYAN NIGHT OPS DARK THEME
+--------------------------------------------------------------------------------
+Default system state (:root or data-theme="dark"):
+- Tailored for low-light command center oversight and nighttime freight convoys.
+- Deep space backgrounds (#0a0f1d, #0f172a) minimize eye fatigue.
+- High-contrast luminescent vector paths: Glowing neon emerald (#10b981) for safe
+  mountain passes; dashed rose (#f43f5e) for high-hazard alternatives.
+- Pulsing radar rings for active landslide locations.
+
+--------------------------------------------------------------------------------
+4.3 ZERO-FOUT THEME INITIALIZATION & PERSISTENCE
+--------------------------------------------------------------------------------
+To guarantee zero Flash of Unstyled Theme (FOUT):
+1. In <head>, an immediate blocking IIFE executes prior to DOM construction:
+   <script>
+     (function() {
+       var savedTheme = localStorage.getItem('smart_ner_theme') || 'dark';
+       document.documentElement.setAttribute('data-theme', savedTheme);
+     })();
+   </script>
+2. setTheme(theme) synchronizes:
+   - document.documentElement attribute: data-theme="light" | "dark"
+   - localStorage: key 'smart_ner_theme'
+   - Toggle button icons (☀️ / 🌙) and labels ("Light Mode" / "Dark Mode")
+   - Active MapLibre GL JS tile layers.
+
+================================================================================
+5. SCREEN-BY-SCREEN ARCHITECTURE (8 OPERATIONAL SCREENS)
+================================================================================
+
+--------------------------------------------------------------------------------
+5.1 AUTHENTICATION PORTAL (LOGIN & SIGNUP)
+--------------------------------------------------------------------------------
+Container: #auth-screen (.auth-portal-screen)
+Components:
+- Floating Theme Switcher (.auth-floating-theme-btn): Quick theme toggle on top-right.
+- Auth Card (.auth-card): Centered glassmorphic card with brand logo badge.
+- Tab Switcher (.auth-tabs): Instant zero-reload toggle between "Sign In" and "Create Account".
+- Sign In Pane (#auth-login-pane):
+  * Email/Username and password inputs with toggleable eye icon.
+  * 1-Click Instant Demo Login Buttons: Pre-fills and logs in as Planner,
+    Gov Desk, or Driver with one click.
+- Sign Up Pane (#auth-signup-pane):
+  * Name, email, phone, organization, and password fields.
+  * Visual Role Selector Cards: 3 interactive cards (Logistics Planner,
+    Disaster Control Room, Mountain Fleet Driver).
+  * Cryptographic security notice highlighting PBKDF2 salting.
+
+--------------------------------------------------------------------------------
+5.2 SCREEN 1: EXECUTIVE OPERATIONS DASHBOARD
+--------------------------------------------------------------------------------
+Container: #dashboard-screen
+Components:
+- Quick Metric Ribbon (4 Key Performance Indicators):
+  * Regional Accessibility Index (e.g., 78.4% - Moderate Access)
+  * Active Mountain Freight Trips (Count)
+  * Monitored NER Road Disruption Sites (Count)
+  * Monitored Critical Arteries (14 Arteries)
+- Automated Judge Demo Runner Widget:
+  * 4-step progressive tour demonstrating USP 1, USP 2, USP 3, and USP 4.
+  * "Next Step" and "Reset Demo" interactive controls.
+- Active Freight Convoys Table: Live status of in-transit and dispatched convoys.
+- Active Disruption Quick Feed: Real-time hazard notices with clearance countdowns.
+
+--------------------------------------------------------------------------------
+5.3 SCREEN 2: FREIGHT & SHIPMENT PLANNING
+--------------------------------------------------------------------------------
+Container: #planning-screen
+Components:
+- Route Planning Form:
+  * Origin Depot Dropdown (Guwahati, Tezpur, Nagaon, Shillong, Silchar, Dimapur).
+  * Destination Dropdown (Itanagar, Tawang, Aizawl, Kohima, Imphal, Agartala).
+  * Priority Level Selector (Medical Critical, Essential Relief, Commercial).
+- Cargo Manifest Builder:
+  * Add custom parcel modal (Name, Category Tier 1-4, Weight kg, Volume m³, Deadline).
+  * Live manifest staging table.
+- Available Fleet Vehicle Cards:
+  * Tata LPTA 715 4x4 High-Torque (5T - Grade A 35% Incline Certified).
+  * Ashok Leyland 1618 6x4 Heavy Cargo (10T - Grade B 22% Incline Safe).
+  * Mahindra Furio 7 High Clearance (3T - Grade A 30% AWD).
+- Action Button: "Run Multi-Factor Route Analysis & Terrain Risk Assessment ->"
+
+--------------------------------------------------------------------------------
+5.4 SCREEN 3: USP 1 - TERRAIN RISK & ROUTE ANALYSIS
+--------------------------------------------------------------------------------
+Container: #route-screen
+Components:
+- 3D Interactive Vector Map Container (#route-leaflet-map):
+  * MapLibre GL JS hardware-accelerated 3D WebGL engine.
+  * Dynamic vector polylines for Route A and Route B.
+  * Origin (Guwahati) and Destination (Itanagar) glowing pin markers.
+- Comparative Corridor Cards Grid (.routes-comparison-grid):
+  * Route A Card (High Risk): 322.4 km, 7.8 hrs, Risk 86.8/100 (Critical),
+    ₹22,100 cost. Highlights mudslide warnings at Bhalukpong.
+  * Route B Card (RECOMMENDED SAFE PASS): 385.0 km, 8.9 hrs, Risk 21.4/100 (Low),
+    ₹17,400 cost. Highlights 4-lane paved bypass via Tezpur Bridge.
+- Explicit Decision Trade-off Box:
+  * Proves to operators that a +62.6 km detour eliminates 65.4 risk points and
+    saves ₹4,700 in stranding/recovery overhead.
+- Action Button: "Proceed to Multi-Tier Cargo Allocation ->"
+
+--------------------------------------------------------------------------------
+5.5 SCREEN 4: USP 2 - MULTI-TIER CARGO ALLOCATION (KNAPSACK)
+--------------------------------------------------------------------------------
+Container: #allocation-screen
+Components:
+- Knapsack Utilization Dual Progress Bars:
+  * Payload Mass Capacity Bar (e.g., 4,500 kg / 4,800 kg - 93.8% Utilized).
+  * Volumetric Cargo Bar (e.g., 18.2 m³ / 22.0 m³ - 82.7% Utilized).
+- Priority Tier Breakdown Pills:
+  * Tier 1 Medical (Antivenom, Cardiac units, Oxygen cylinders) -> 100% Packed.
+  * Tier 2 Essential Goods (Grains, Milk powder, Water kits) -> Packed.
+  * Tier 3/4 Low-Priority Goods -> Staged for Wave 2.
+- Axle-Weight Distribution & Loading Directives:
+  * Center-of-gravity stabilization instructions for mountain hairpin bends.
+- Action Button: "Proceed to Convoy Trip Assignment ->"
+
+--------------------------------------------------------------------------------
+5.6 SCREEN 5: CONVOY ASSIGNMENT & DRIVER DISPATCH
+--------------------------------------------------------------------------------
+Container: #assignment-screen
+Components:
+- Assigned Vehicle Review Card.
+- Driver Selection Cards:
+  * Tashi Norbu (14 yrs exp, Hill Driving Certified, 4.95 rating, Monpa/Hindi).
+  * Bikram Roy (9 yrs exp, Certified, 4.78 rating).
+  * Debajit Bora (11 yrs exp, Certified, 4.88 rating).
+- Final Manifest Verification Panel.
+- Action Button: "🚀 DISPATCH CONVOY TRIP #1024"
+
+--------------------------------------------------------------------------------
+5.7 SCREEN 6: USP 3 - DRIVER FIELD HUD (OFFLINE-FIRST EXECUTION)
+--------------------------------------------------------------------------------
+Container: #driver-screen
+Components:
+- Connectivity Mode Simulation Toggle:
+  * "Live Online Mode" vs "OFFLINE MODE (Bhalukpong Mountain Dead Zone)".
+- Offline Emergency Banner:
+  * Displays amber warning during dead-zone operation: "Operating from local
+    cache. Checkpoint timestamps and delivery signatures stored in client queue."
+- Trip Summary Card:
+  * Trip #1024, Guwahati -> Itanagar via NH-27, Tata 4x4 Cruiser.
+- Sequential Waypoint Checkpoint Tracker:
+  * Guwahati Central Hub -> Passed (10:15 AM)
+  * Nagaon Bypass -> Passed (12:40 PM)
+  * Kaliabhomora Bridge -> Passed (02:15 PM)
+  * Banderdewa Border Checkpost -> "Mark as Passed" interactive button.
+  * Itanagar Relief Depot -> Pending.
+- Parcel Delivery Confirmation Checklist:
+  * Individual "Confirm Delivery" buttons with offline signature buffering.
+- Offline Sync Log Panel:
+  * Displays queued and reconciled actions with millisecond timestamps.
+
+--------------------------------------------------------------------------------
+5.8 SCREEN 7: LANDSLIDE & WEATHER DISRUPTION ALERTS
+--------------------------------------------------------------------------------
+Container: #alerts-screen
+Components:
+- Active Regional Threat Table:
+  * Severity Badges: Critical (Red), High (Orange), Moderate (Yellow).
+  * Corridor references: NH-15 Bhalukpong Pass, NH-29 Kohima Bypass, etc.
+  * Disruption type: Rockfall, Mudslide, Flash Flood Bridge Washout.
+  * Estimated clearance countdown timers (e.g., "18.5 hrs remaining").
+
+--------------------------------------------------------------------------------
+5.9 SCREEN 8: USP 4 - REGIONAL SITUATIONAL OVERSIGHT & WHAT-IF SIMULATOR
+--------------------------------------------------------------------------------
+Container: #gov-screen
+Components:
+- Regional Accessibility Index (RAI) Gauge:
+  * Dynamic accessibility rating across 8 North Eastern states.
+- Regional Control Room Vector Map (#gov-leaflet-map):
+  * MapLibre GL JS map displaying cyan glowing state logistics hubs and
+    pulsing red hazard markers.
+- Interactive "What-If" Disruption Simulator:
+  * Choke Point Dropdown (e.g., "NH-15 Bhalukpong Mountain Pass Mudslide").
+  * Severity Slider (Minor, Moderate, Critical Road Washout).
+  * "Simulate Regional Disruption" trigger button.
+  * Real-time output: Immediate detour travel time variance (+2.4 hrs),
+    additional fuel burn, and isolated district count.
+
+--------------------------------------------------------------------------------
+5.10 SECURITY & CREDENTIALS VAULT MODAL
+--------------------------------------------------------------------------------
+Container: #credentials-vault-modal (.modal-backdrop)
+Components:
+- Modal Dialog (.modal-dialog.modal-xl):
+  * Header with vault icon, title, and close button.
+  * Explanatory banner emphasizing PBKDF2 salting and one-way hashing.
+  * User Accounts Table (.vault-table):
+    - Username, Full Name, Assigned Role.
+    - Contact Information.
+    - Encrypted Password Hash: Displays 16-byte salt and derived key with
+      one-click "📋 Copy Hash" button.
+    - Registration and last active timestamps.
+  * Action Footer:
+    - "📋 Copy Raw JSON" button (copies full credential audit payload).
+    - "🔄 Refresh Table" button.
+    - "Close Vault" button.
+
+================================================================================
+6. MAPPING ENGINE: MAPLIBRE GL JS v4 ARCHITECTURE
+================================================================================
+
+--------------------------------------------------------------------------------
+6.1 ZERO-TOKEN OPEN ARCHITECTURE
+--------------------------------------------------------------------------------
+The platform uses MapLibre GL JS v4 via official CDN:
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
+Requires zero API tokens, credit cards, or external accounts. All vector and raster
+tiles are fetched directly from CartoDB's high-speed global tile mirrors.
+
+--------------------------------------------------------------------------------
+6.2 DUAL BASEMAP SYNCHRONIZATION
+--------------------------------------------------------------------------------
+Two independent raster tile styles are defined in frontend/js/app.js:
+
+1. MAPLIBRE_DARK_STYLE:
+   Uses CartoDB Dark Matter raster tiles:
+   https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png
+   Designed for nighttime operations and high-contrast glowing HUD paths.
+
+2. MAPLIBRE_LIGHT_STYLE:
+   Uses CartoDB Voyager raster tiles:
+   https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png
+   Designed for clean, daylight operations with crisp road network contours.
+
+Dynamic Switching:
+When the user toggles the theme, setTheme() calls map.setStyle(newStyle). Upon
+the map's 'load' event, route polylines and markers are re-rendered automatically.
+
+--------------------------------------------------------------------------------
+6.3 3D PERSPECTIVE CONTROLS
+--------------------------------------------------------------------------------
+Maps are initialized with native 3D perspective pitch and bearing:
+- Route Map (#route-leaflet-map):
+  center: [92.75, 26.65] (Brahmaputra Valley)
+  zoom: 7.3
+  pitch: 45° (3D mountain slope perspective)
+  bearing: -12° (Oriented toward Arunachal Himalayan foothills)
+- Regional Gov Map (#gov-leaflet-map):
+  center: [93.0, 26.2]
+  zoom: 6.6
+  pitch: 40°
+  bearing: -8°
+
+Navigation Controls:
+maplibregl.NavigationControl({ visualizePitch: true }) added to top-right corner.
+
+--------------------------------------------------------------------------------
+6.4 DYNAMIC VECTOR GEOJSON LAYERS (ROUTE A VS ROUTE B)
+--------------------------------------------------------------------------------
+In renderMapLibreRoutes(routes):
+1. Coordinate Transposition:
+   Converts backend [lat, lng] pairs to GeoJSON standard [lng, lat]:
+   const coordsLngLat = r.path_coordinates.map(pt => [pt[1], pt[0]]);
+2. Route B (Safe Corridor) Dual Layer:
+   - Under-layer (Neon Glow):
+     type: "line", line-color: "#10b981", line-width: 14, line-blur: 6, line-opacity: 0.35
+   - Upper-layer (Solid Path):
+     type: "line", line-color: "#10b981", line-width: 5, line-opacity: 0.95
+3. Route A (High Hazard Corridor):
+   - Dashed Red Line:
+     type: "line", line-color: "#f43f5e", line-width: 3.5, line-dasharray: [2, 2]
+4. Interactive Click Popups:
+   Clicking any corridor displays risk score, duration, distance, and safety status.
+5. Spatial Bounding Box Fitting:
+   allLngLats.reduce((b, coord) => b.extend(coord), new maplibregl.LngLatBounds(...))
+   map.fitBounds(bounds, { pitch: 45, bearing: -12, duration: 1600 })
+
+--------------------------------------------------------------------------------
+6.5 PULSING LANDSLIDE RADAR MARKERS & STATE HUB PINS
+--------------------------------------------------------------------------------
+- Origin Pin: Glowing cyan marker (.map-custom-marker.map-marker-origin)
+- Destination Pin: Glowing emerald marker (.map-custom-marker.map-marker-dest)
+- State Hub Pins: Cyan hubs with elevation and district data (.map-marker-hub)
+- Hazard Markers: Pulsing red markers (.map-marker-hazard) with CSS animation:
+  @keyframes pulseHazard {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
+    70% { transform: scale(1.2); box-shadow: 0 0 0 12px rgba(244, 63, 94, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+  }
+
+================================================================================
+7. CLIENT-SIDE STATE MANAGEMENT (appState)
+================================================================================
+Defined at the top of frontend/js/app.js:
+
+const appState = {
+  currentRole: "planner",         // Active role: "planner" | "government" | "driver"
+  activeScreen: "dashboard-screen",// Active visible container ID
+  isOnline: true,                 // Connectivity mode (Online / Offline simulation)
+  theme: "dark",                  // Active theme: "dark" | "light"
+  currentUser: null,              // Authenticated user object
+  authToken: null,                // Session auth token
+  currentShipment: null,          // Active shipment under planning
+  availableVehicles: [],          // Vehicles retrieved from /api/shipments/vehicles
+  routeAnalysis: null,            // USP 1 calculated route alternatives
+  selectedRoute: null,            // Operator-selected route option
+  allocationManifest: null,       // USP 2 optimized Knapsack allocation manifest
+  activeTrip: null,               // Dispatched Trip #1024 object
+  regionalOverview: null,         // USP 4 regional overview data
+  disruptions: [],                // Active regional alerts feed
+  demoCurrentStep: 0,             // Automated Judge Demo runner progress (0-4)
+  routeMap: null,                 // MapLibre GL map instance for Route screen
+  govMap: null                    // MapLibre GL map instance for Government screen
+};
+
+Lifecycle:
+- Mutated synchronously during screen transitions and user inputs.
+- Re-hydrated from localStorage upon page refresh (for theme and cached trips).
+
+================================================================================
+8. OFFLINE-FIRST SYNCHRONIZATION ENGINE (OfflineSyncManager)
+================================================================================
+Defined in frontend/js/offline_sync.js:
+
+Storage Keys:
+- smart_ner_cached_trip: Complete trip JSON for offline driver navigation.
+- smart_ner_offline_sync_queue: Write-Ahead-Log array of pending telemetry events.
+- smart_ner_connectivity_mode: "Online" | "Offline".
+- smart_ner_theme: "dark" | "light".
+
+Execution Flow:
+1. recordDriverAction({ type, payload }):
+   - Creates action record:
+     { id: "ACT-" + Date.now(), type: "CHECKPOINT"|"DELIVERY", payload, timestamp, offlineRecorded: !isOnline }
+   - Appends to this.syncQueue in LocalStorage.
+   - Optimistically mutates locally cached trip so driver sees instant UI green checkmark.
+2. flushSyncQueue(apiBaseUrl):
+   - Triggered upon network restoration or manual reconnection toggle.
+   - Dispatches batch payload to POST /api/driver/sync-telemetry.
+   - Upon receiving HTTP 200 { status: "SYNCED" }, clears LocalStorage queue.
+
+================================================================================
+9. JAVASCRIPT FUNCTION DIRECTORY & API INTEGRATION MATRIX
+================================================================================
+
+Function Name                File                 Purpose & API Route
+--------------------------------------------------------------------------------
+switchAuthTab(tab)           index.html (inline)  Toggles between Login & Signup forms
+selectSignupRole(role)       index.html (inline)  Selects radio role in signup card
+togglePasswordVisibility()   index.html (inline)  Toggles password input type (text/pwd)
+quickFillDemo(role)          index.html (inline)  Pre-fills demo credentials
+instantLogin(role)           index.html (inline)  1-Click login execution for demo
+performLogin(email, pwd)     index.html (inline)  POST /api/auth/login
+handleSignupSubmit(e)        index.html (inline)  POST /api/auth/register
+handleLogout()               index.html (inline)  Clears session & shows auth screen
+openCredentialsModal()       app.js               Opens Credentials Vault modal
+closeCredentialsModal()      app.js               Hides Credentials Vault modal
+loadCredentialsVault()       app.js               GET /api/auth/users
+copyPasswordHash(hash)       app.js               Copies salted PBKDF2 hash to clipboard
+copyCredentialsJSON()        app.js               Copies full credentials JSON
+showToast(msg, type)         app.js               Renders self-dismissing toast notification
+navigateToScreen(screenId)   app.js               Client-side SPA screen switcher
+switchRole(roleName)         app.js               Switches role (Planner/Gov/Driver)
+toggleTheme()                app.js               Toggles between Light & Dark themes
+setTheme(theme, notify)      app.js               Applies theme, tokens & updates MapLibre
+getActiveMapStyle()          app.js               Returns Dark or Light MapLibre style
+initRouteMap()               app.js               Initializes MapLibre for Screen 3
+initGovMap()                 app.js               Initializes MapLibre for Screen 8
+renderMapLibreRoutes(routes) app.js               Renders GeoJSON routes & 3D pins
+loadMapLibreGovMarkers(map)  app.js               Renders state hubs & pulsing hazards
+loadMainDashboard()          app.js               GET /api/gov/regional-overview, /api/alerts/
+loadShipmentPlanning()       app.js               GET /api/shipments/vehicles, /sample-cargo
+runRouteAnalysis()           app.js               GET /api/routes/analyze?origin=..&destination=..
+runCargoAllocation()         app.js               POST /api/allocation/optimize
+proceedToTripAssignment()    app.js               Transitions to Screen 5 & sets up drivers
+onDriverSelectChange()        app.js               Updates real-time driver profile preview & lock info
+dispatchTrip()               app.js               POST /api/trips/assign with deadline lockout
+releaseDriver(driverId)      app.js               POST /api/trips/drivers/{id}/release (frees driver)
+completeAndReleaseTrip()     app.js               Completes trip on Driver Screen & frees driver
+loadDriverScreen()           app.js               GET /api/driver/assigned-trip with deadline countdown
+driverPassCheckpoint(name)   app.js               Marks checkpoint passed (online/offline)
+driverDeliverParcel(id)      app.js               Marks parcel delivered (online/offline)
+toggleConnectivity(mode)     app.js               Simulates mountain cellular drop/restore
+loadAlertsScreen()           app.js               GET /api/alerts/
+loadGovernmentDashboard()    app.js               GET /api/gov/regional-overview
+runWhatIfSimulation()        app.js               POST /api/gov/what-if-simulate
+runJudgeDemoStep(step)       app.js               Automated 4-step interactive judge presentation
+
+================================================================================
+10. CSS CLASS & COMPONENT REFERENCE GUIDE
+================================================================================
+
+Component Class             Description
+--------------------------------------------------------------------------------
+.top-navbar                 Sticky header with blur, brand section, and badges
+.brand-icon                 Gradient logo container with SVG mountain chevron
+.nav-role-switcher          Segmented button group for Planner, Gov, and Driver
+.role-btn                   Interactive role pill button with active indicator
+.theme-toggle-btn           Pill button displaying ☀️ / 🌙 with smooth hover transition
+.auth-floating-theme-btn    Top-right floating theme button on login screen
+.connectivity-badge         Pill showing green "ONLINE" or pulsing red "OFFLINE"
+.data-transparency-pill     Pills demarcating LIVE DATA, HISTORICAL, SIMULATED
+.sidebar                    Left-hand navigation panel with grouped operational loops
+.nav-link                   Navigation item with active cyan border-left indicator
+.main-content               Scrollable viewport containing active screen
+.glass-panel                Glassmorphic card with backdrop-blur, subtle border, shadow
+.page-header                Screen title block with subtitle and action buttons
+.custom-table               Clean, responsive tabular layout for freight data
+.vault-table                Security audit table displaying encrypted password hashes
+.btn-primary                Cyan/blue gradient button with hover elevation
+.btn-success                Emerald green button for confirmed dispatches
+.btn-danger                 Rose/red button for hazard alerts and rerouting triggers
+.btn-outline                Subtle bordered button for secondary controls
+.tier-badge                 Criticality tag (Tier 1 Medical, Tier 2 Essential, etc.)
+.route-card                 Corridor comparison card with distance, risk, and duration
+.route-card.recommended     Emerald bordered card with glowing background highlight
+.route-card.high-risk       Dashed rose bordered card indicating mudslide danger
+.map-box                    Container for WebGL MapLibre GL JS mapping canvas
+.maplibregl-popup-content   Glassmorphic dark (or clean white) route telemetry tooltip
+.map-custom-marker          Glowing circular SVG waypoint pin
+.map-marker-origin          Cyan glowing pin for Guwahati depot
+.map-marker-dest            Emerald glowing pin for Itanagar capital terminal
+.map-marker-hazard          Pulsing red multi-ring radar marker for active landslides
+.driver-action-card         Driver mobile HUD action pane with sequential checkpoints
+.toast                      Floating notification banner (info, success, warning, danger)
+.modal-backdrop             Dark blurred overlay for credentials vault modal
+
+================================================================================
+END OF FRONTEND TECHNICAL REFERENCE & ARCHITECTURE DOCUMENTATION
+================================================================================

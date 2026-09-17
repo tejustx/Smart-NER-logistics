@@ -1,0 +1,15 @@
+district,state,historical_landslides_1998_2022,vulnerability_index,national_rank,lithology,primary_river,cwc_gauge_station
+Kamrup Metropolitan,Assam,95,0.38,68,Alluvium & Archaean Gneissic Inliers,Brahmaputra South Bank,Guwahati Pandu (Danger Level 49.68m)
+Papum Pare,Arunachal Pradesh,1240,0.88,8,Tertiary Siwalik Sandstone & Unconsolidated Siltstone,Dikrong & Subansiri Tributaries,Banderdewa / Doimukh Hydro-Post
+East Khasi Hills,Meghalaya,910,0.82,12,Precambrian Shillong Group Quartzite & Granite Gneiss,Umtru / Umiam River Gorge,Nongpoh Hydro-Telemetry Post
+Tawang,Arunachal Pradesh,1420,0.91,4,Higher Himalayan Crystallines & Glacial Moraines,Tenga & Kameng River Basin,Bhalukpong / Tenga River Station
+Sonitpur,Assam,60,0.28,84,Quaternary Alluvial Plains,Brahmaputra North Bank (Tezpur Crossing),Tezpur Kalia Bhomora Hydrological Gauge
+Nagaon,Assam,35,0.22,98,Central Assam Floodplain Silt,Kolong & Kopili River Basin,Dharamtul Kopili Gauge
+Cachar,Assam,120,0.42,62,Surma Series Soft Clayey Siltstone,Barak River Basin,Silchar Annapurna Ghat Gauge
+Aizawl,Mizoram,960,0.84,14,Tertiary Surma Group Soft Fractured Sandstone & Shale,Tuirial & Dhaleswari Rivers,Tuirial Hydro Dam Intake
+Kolasib,Mizoram,880,0.85,13,Disang Soft Shales (Prone to Water Liquefaction),Dhaleswari River Escarpment,Vairengte River Monitoring Post
+Dimapur,Nagaland,180,0.46,58,Foothill Alluvium & Tipam Sandstone,Chathe & Dhansiri River Channel,Dimapur Nagarjan Bridge Gauge
+Kohima,Nagaland,1150,0.89,11,Splintery Disang Shales (Pagla Pahar Active Shear Fault),Chathe Gorge / Pagla Pahar Nallah Toe,Zubza River Telemetry Station
+Imphal West,Manipur,410,0.74,28,Lacustrine Clay Deposits & Disang Flysch,Iril & Imphal River Basin,Lilong Hydrological Station
+West Tripura,Tripura,45,0.24,92,Tipam Sandstone Low Anticlinal Ridges,Howrah & Gumti Rivers,Agartala Howrah Gauge
+East Sikkim,Sikkim,2150,0.94,2,"Daling Series Phyllites, Schists & Metasediments",Teesta & Rangpo Rivers,Melli / Singtam Teesta Basin Station

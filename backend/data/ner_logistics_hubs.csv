@@ -1,0 +1,14 @@
+hub_name,state,district,latitude,longitude,elevation_m,is_primary_depot
+Guwahati,Assam,Kamrup Metropolitan,26.1445,91.7362,55,False
+Itanagar,Arunachal Pradesh,Papum Pare,27.0844,93.6053,750,False
+Shillong,Meghalaya,East Khasi Hills,25.5788,91.8933,1525,False
+Tawang,Arunachal Pradesh,Tawang,27.5861,91.8594,3048,False
+Tezpur,Assam,Sonitpur,26.6528,92.7926,48,False
+Nagaon,Assam,Nagaon,26.3452,92.684,60,False
+Silchar,Assam,Cachar,24.817,92.795,25,False
+Aizawl,Mizoram,Aizawl,23.7271,92.7176,1132,False
+Dimapur,Nagaland,Dimapur,25.909,93.7266,145,False
+Kohima,Nagaland,Kohima,25.6751,94.1086,1444,False
+Imphal,Manipur,Imphal West,24.817,93.9368,786,False
+Agartala,Tripura,West Tripura,23.8315,91.2868,16,False
+Gangtok,Sikkim,East Sikkim,27.3314,88.6138,1650,False

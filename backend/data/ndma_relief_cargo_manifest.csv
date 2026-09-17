@@ -1,0 +1,13 @@
+item_id,item_name,category,tier,priority_weight,weight_kg,volume_m3,deadline_hours,storage_instruction
+MED-01,Polyvalent Snake Antivenom Crate,Emergency Medical,1,10000,180.0,0.45,8,"Floor center-line, shock mounts, 2-8 C cold-chain"
+MED-02,Emergency Cardiac Injectables & ICU Kits,Emergency Medical,1,10000,220.0,0.55,12,Forward cabin vibration-isolated mounting harness
+MED-03,Liquid Medical Oxygen Cylinders (B-Type),Emergency Medical,1,10000,650.0,1.2,14,Upright strap harness anchored to vehicle chassis bed
+MED-04,Trauma Surgery Surgical Packs & Blood Plasma,Emergency Medical,1,10000,310.0,0.85,10,Cold-chain cooler box on low chassis platform
+FOOD-01,Fortified Infant Nutrition Packs (Baby Formula),Essential Goods,2,5000,450.0,1.8,24,Reinforced waterproof tarpaulin cover
+FOOD-02,High-Calorie Ready-to-Eat Emergency Meals,Essential Goods,2,5000,1200.0,3.4,36,Moisture-isolated middle bay pallet stack
+FOOD-03,Water Purification Chemical Kits & Tablets,Essential Goods,2,5000,280.0,0.9,24,Elevated pallet to prevent water ingress
+INFRA-01,Bailey Bridge Steel Transom Pins & Hardware,Infrastructure,3,1000,1800.0,2.2,48,Direct floor anchor bolts along vehicle axle center
+INFRA-02,Diesel Generator Set (25 kVA Compact Skid),Infrastructure,3,1000,950.0,2.8,48,Chassis center tied down with heavy-duty ratchets
+INFRA-03,Excavator Tow Winch Cables & Snatch Blocks,Infrastructure,3,1000,420.0,0.7,72,Rear bay floor containment
+COMM-01,General Commercial FMCG Dry Groceries,Commercial Cargo,4,100,1400.0,6.5,96,Upper deck or staged for Convoy Wave 2
+COMM-02,Regional Hardware & Construction Material,Commercial Cargo,4,100,2100.0,8.2,120,Staged for Convoy Wave 2 (Deferred if truck full)

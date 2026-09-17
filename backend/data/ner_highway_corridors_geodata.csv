@@ -1,0 +1,19 @@
+segment_id,name,corridor_id,district,river_name,rainfall_intensity_mm_hr,rainfall_cumulative_24h,slope_gradient_pct,elevation_m,river_proximity_km,road_quality_index,toe_protection_type,scour_vulnerability
+SEG-A1,Guwahati to Mangaldai (NH-15 Northern Foothills),CORR-GHY-ITA-A,Kamrup Metropolitan,Brahmaputra North Bank Channel,42.0,85.0,4.0,30.0,0.45,0.75,Unshielded Floodplain Embankment,Moderate
+SEG-A2,Mangaldai to Banderdewa (NH-15 Gohpur Flood/Mud Zone),CORR-GHY-ITA-A,Papum Pare,Subansiri Tributaries & Saturated Silt Chute,84.0,195.0,28.0,280.0,0.12,0.45,Raw Cut Slope (Zero Toe Revetment),Critical
+SEG-A3,Banderdewa to Itanagar (NH-415 Hill Ingress Escarpment),CORR-GHY-ITA-A,Papum Pare,Dikrong River Gorge,72.0,160.0,32.0,620.0,0.22,0.55,Partial Dry Stone Gabion (Undercut),High
+SEG-B1,Guwahati to Nagaon (NH-27 4-Lane Engineered Corridor),CORR-GHY-ITA-B,Nagaon,Kolong River Basin (Buffered),22.0,40.0,3.0,45.0,4.5,0.92,High-Board Concrete Embankment Setback,Shielded / Minimal
+SEG-B2,Nagaon to Tezpur Bridge (NH-715A Reinforced Approach),CORR-GHY-ITA-B,Sonitpur,Brahmaputra Main Stem (Bridge Approach),28.0,55.0,5.0,20.0,1.6,0.88,Heavy Reinforced Riprap Concrete Revetment,Shielded / Minimal
+SEG-B3,Tezpur Bridge to Itanagar (NH-52 / Naharlagun Bypass),CORR-GHY-ITA-B,Papum Pare,Pachin River Valley (High Terrace),32.0,68.0,14.0,680.0,2.8,0.82,Geogrid Soil-Nailed Mountain Shelf,Low
+SEG-GHY-SHL-A,NH-06 Old Valley Ghat Road (Nongpoh Hairpin Cuts),CORR-GHY-SHL-A,East Khasi Hills,Umtru River Gorge,68.0,145.0,24.0,950.0,0.35,0.5,Unreinforced Road Shoulder Cut,High
+SEG-GHY-SHL-B,NH-06 4-Lane Engineered Expressway via Umiam Viaduct,CORR-GHY-SHL-B,East Khasi Hills,Umiam Lake Drainage (Elevated),35.0,70.0,11.0,1050.0,1.9,0.9,Elevated Concrete Viaduct on Bored Piles,Shielded / Minimal
+SEG-TEZ-TWN-A,NH-13 Old Sela Pass Ridge Crest (Scree & Avalanche Zone),CORR-TEZ-TWN-A,Tawang,Tenga & Kameng Torrential River Gorge,78.0,170.0,36.0,3100.0,0.28,0.4,Unprotected Scree Debris Base,Critical
+SEG-TEZ-TWN-B,NH-13 BRO Sela Twin Tunnel All-Weather Alignment,CORR-TEZ-TWN-B,Tawang,Subterranean Mountain Pass Axis,30.0,65.0,12.0,2600.0,3.5,0.94,BRO Bored Concrete Twin Tunnel Alignment,Shielded / Minimal
+SEG-IXS-AJL-A,NH-306 Direct Escarpment Road (Kolasib Disang Shale Cuts),CORR-IXS-AJL-A,Aizawl,Tuirial & Dhaleswari River Gorge,76.0,165.0,29.0,880.0,0.18,0.42,Soft Disang Shale Cutting (Prone to Toe Liquefaction),Critical
+SEG-IXS-AJL-B,NH-306 Widened Hill Corridor via Engineered Culverts,CORR-IXS-AJL-B,Aizawl,Upper Ridge Water Drainage System,32.0,60.0,9.0,920.0,2.1,0.89,Geogrid Reinforced Soil Walls & Sump Culverts,Shielded / Minimal
+SEG-DMU-KHM-A,NH-29 Pagla Pahar Sinking Zone Escarpment,CORR-DMU-KHM-A,Kohima,Chathe River Torrent / Pagla Pahar Fault Nallah,82.0,185.0,31.0,720.0,0.15,0.38,Active Shear Fault Toe (Scoured Base),Critical
+SEG-DMU-KHM-B,NH-29 4-Lane Elevated Bypass Viaduct,CORR-DMU-KHM-B,Kohima,Zubza River High Shelf (Viaduct Span),25.0,50.0,8.0,750.0,2.2,0.91,Heavy Reinforced Viaduct Piers on Bedrock,Shielded / Minimal
+SEG-SLG-GTK-A,NH-10 Teesta River Canyon Road (Active Scour Zone),CORR-SLG-GTK-A,East Sikkim,Teesta River Main Channel (Torrential),92.0,220.0,35.0,650.0,0.08,0.32,Eroded Riprap & Raw Riverbank Underwash,Critical
+SEG-SLG-GTK-B,NH-717A Alternative Ridge Bypass via Ranipool,CORR-SLG-GTK-B,East Sikkim,Upper Ridge Drainage Basin,38.0,75.0,14.0,1200.0,2.4,0.86,Reinforced Rock-Bolted Mountain Bench,Low
+SEG-KHM-IMP-A,NH-02 Senapati Mountain Pass Escarpment,CORR-KHM-IMP-A,Imphal West,Iril River Gorge Headwaters,70.0,150.0,26.0,1100.0,0.22,0.44,Unshielded Soft Shale Cut,High
+SEG-KHM-IMP-B,NH-02 Widened Foothill Corridor with Gabion Protection,CORR-KHM-IMP-B,Imphal West,Valley Basin Drainage,28.0,55.0,7.0,850.0,1.8,0.88,Galvanized Gabion Wire Mattresses & Drains,Shielded / Minimal

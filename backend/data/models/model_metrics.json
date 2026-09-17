@@ -1,0 +1,52 @@
+{
+  "model_architecture": "MultiOutputClassifier(RandomForestClassifier)",
+  "framework": "scikit-learn",
+  "n_estimators": 130,
+  "max_depth": 9,
+  "dataset_samples": 1600,
+  "train_samples": 1280,
+  "test_samples": 320,
+  "overall_accuracy": 0.9125,
+  "overall_macro_f1": 0.8673,
+  "horizons": {
+    "6h": {
+      "accuracy": 0.9594,
+      "macro_f1": 0.8507,
+      "precision": 0.9444,
+      "recall": 0.5862,
+      "positive_cases_test": 29,
+      "total_test_samples": 320
+    },
+    "12h": {
+      "accuracy": 0.8906,
+      "macro_f1": 0.8769,
+      "precision": 0.8476,
+      "recall": 0.8241,
+      "positive_cases_test": 108,
+      "total_test_samples": 320
+    },
+    "24h": {
+      "accuracy": 0.8875,
+      "macro_f1": 0.8742,
+      "precision": 0.9065,
+      "recall": 0.9238,
+      "positive_cases_test": 210,
+      "total_test_samples": 320
+    }
+  },
+  "feature_importances": {
+    "rainfall_intensity_mm_hr": 0.2273,
+    "rainfall_cumulative_24h": 0.245,
+    "slope_gradient_pct": 0.2666,
+    "elevation_m": 0.0468,
+    "river_proximity_km": 0.1455,
+    "road_quality_index": 0.0688
+  },
+  "data_provenance": {
+    "historical_rainfall": "IMD Historical Monsoon Archives (Assam, Arunachal, Meghalaya, Nagaland, Mizoram, Sikkim 1995-2024)",
+    "historical_landslides": "ISRO Bhuvan Landslide Atlas of India (NRSC 1998-2022, ~80,000 national geohazard events)",
+    "elevation_slope": "CartoDEM / SRTM 30m Digital Elevation Model",
+    "river_drainage_proximity": "CWC & OSM Hydrographic Network (Brahmaputra, Dikrong, Subansiri, Umtru, Kameng, Chathe, Tuirial, Teesta)",
+    "live_meteorological_telemetry": "Open-Meteo High-Resolution Numerical Model (IMD Automatic Weather Station Synced)"
+  }
+}
