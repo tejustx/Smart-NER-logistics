@@ -53,3 +53,5 @@ htmlcov/
 *.sqlite3
 
 scratch/test_output.pdf
+# PDF files
+*.pdf
