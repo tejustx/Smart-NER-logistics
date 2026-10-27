@@ -108,7 +108,7 @@ class UserService:
                         organization=user_record.get("organization"),
                         encrypted_password=user_record["encrypted_password"],
                         status=user_record.get("status", "Active"),
-                        created_at=user_record.get("created_at"),
+                        created_at=user_record.get("created_at") or datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         last_login=user_record.get("last_login")
                     )
                     db.add(new_user)
@@ -116,7 +116,10 @@ class UserService:
             finally:
                 db.close()
         except Exception as e:
-            print(f"[UserService] Warning: could not persist user to database: {e}")
+         import traceback
+         print("[UserService] DATABASE SAVE ERROR:")
+         print(str(e))
+         traceback.print_exc()
 
     def _db_update_login(self, user_id: str, last_login: str):
         """Updates last_login timestamp in the database."""

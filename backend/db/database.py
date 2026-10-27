@@ -4,13 +4,14 @@ Database Engine, Session Management & Supabase Connection
 """
 
 import os
+
 from typing import Generator
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
 
 # Read DATABASE_URL from environment
 RAW_DATABASE_URL = os.getenv("DATABASE_URL", "").strip()

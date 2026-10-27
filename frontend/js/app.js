@@ -2798,7 +2798,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".nav-link").forEach(link => {
     link.addEventListener("click", (e) => {
       const screenId = link.getAttribute("data-screen");
-      if (!screenId) return; // Allow normal clicks for links without data-screen (e.g. Credentials Vault)
+      if (!screenId) return;
       e.preventDefault();
       navigateToScreen(screenId);
 
@@ -3181,115 +3181,7 @@ function handleLogout() {
   showToast("You have been signed out. Enter credentials to log in again.", "info");
 }
 
-// ================== CREDENTIALS & SECURITY VAULT CONTROLLER ==================
 
-let cachedCredentials = [];
-
-function openCredentialsModal() {
-  const modal = document.getElementById("credentials-modal");
-  if (modal) {
-    modal.style.display = "flex";
-    loadCredentialsVault();
-  }
-}
-
-function closeCredentialsModal() {
-  const modal = document.getElementById("credentials-modal");
-  if (modal) modal.style.display = "none";
-}
-
-async function loadCredentialsVault() {
-  const tbody = document.getElementById("vault-table-body");
-  const totalEl = document.getElementById("vault-stat-total");
-  if (!tbody) return;
-
-  tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:2rem; color:var(--text-muted);">Fetching encrypted user credentials...</td></tr>`;
-
-  try {
-    const res = await fetch(`${API_BASE}/api/auth/credentials`);
-    const users = await res.json();
-    cachedCredentials = users;
-
-    if (totalEl) totalEl.textContent = users.length;
-
-    if (!users || users.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:2rem; color:var(--text-dim);">No registered user accounts found.</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = users.map(u => {
-      const roleBadges = {
-        planner: '<span class="status-pill status-ready">Planner</span>',
-        government: '<span class="status-pill status-rerouted">Gov Control</span>',
-        driver: '<span class="status-pill status-in-transit">Driver</span>',
-        admin: '<span class="status-pill status-admin">Admin</span>'
-      };
-      const badge = roleBadges[u.role] || `<span class="status-pill">${u.role}</span>`;
-      
-      const safeHash = u.encrypted_password || "No Hash";
-
-      return `
-        <tr>
-          <td>
-            <div style="font-weight:600; color:var(--text-bright);">${u.name}</div>
-            <div style="font-size:0.72rem; color:var(--text-muted);">${u.organization || 'NER Logistics'}</div>
-          </td>
-          <td>
-            ${badge}
-            <div style="font-size:0.68rem; color:var(--text-dim); margin-top:0.2rem;">${u.role_display || ''}</div>
-          </td>
-          <td>
-            <div style="font-weight:500;">${u.email}</div>
-            <div style="font-size:0.72rem; color:var(--text-dim);">${u.phone || 'N/A'}</div>
-          </td>
-          <td>
-            <div class="pwd-hash-badge" title="${safeHash}">
-              <span class="pwd-hash-text">${safeHash.substring(0, 32)}...</span>
-              <button class="copy-hash-btn" onclick="copyPasswordHash('${safeHash}')" title="Copy full encrypted hash">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              </button>
-            </div>
-            <div style="font-size:0.65rem; color:#10b981; margin-top:0.2rem;">🔒 Salted PBKDF2-SHA256 (100k rounds)</div>
-          </td>
-          <td>
-            <div style="font-size:0.75rem; color:var(--text-main);">${u.created_at}</div>
-            <div style="font-size:0.68rem; color:var(--text-muted);">Last: ${u.last_login || 'Never'}</div>
-          </td>
-        </tr>
-      `;
-    }).join("");
-
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:2rem; color:#ef4444;">Failed to load credentials: ${err.message}</td></tr>`;
-  }
-}
-
-function copyPasswordHash(hash) {
-  navigator.clipboard.writeText(hash).then(() => {
-    showToast("Encrypted password hash copied to clipboard!", "success");
-  }).catch(() => {
-    prompt("Copy encrypted hash:", hash);
-  });
-}
-
-function copyCredentialsJSON() {
-  if (!cachedCredentials || cachedCredentials.length === 0) {
-    showToast("No credentials data to copy.", "warning");
-    return;
-  }
-  const jsonStr = JSON.stringify(cachedCredentials, null, 2);
-  navigator.clipboard.writeText(jsonStr).then(() => {
-    showToast("All user credentials copied as formatted JSON!", "success");
-  }).catch(() => {
-    const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "ner_registered_credentials.json";
-    a.click();
-    showToast("Downloaded credentials JSON file.", "success");
-  });
-}
 
 // ================== ACTIVE TRIP INSPECTION CONTROLLER ==================
 
@@ -3583,11 +3475,7 @@ window.performLogin = performLogin;
 window.handleLoginSubmit = handleLoginSubmit;
 window.handleSignupSubmit = handleSignupSubmit;
 window.handleLogout = handleLogout;
-window.openCredentialsModal = openCredentialsModal;
-window.closeCredentialsModal = closeCredentialsModal;
-window.loadCredentialsVault = loadCredentialsVault;
-window.copyPasswordHash = copyPasswordHash;
-window.copyCredentialsJSON = copyCredentialsJSON;
+
 window.viewTripDetails = viewTripDetails;
 window.closeTripInspectModal = closeTripInspectModal;
 window.trackCurrentInspectedTrip = trackCurrentInspectedTrip;

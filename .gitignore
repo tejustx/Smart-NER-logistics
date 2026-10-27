@@ -45,3 +45,11 @@ htmlcov/
 
 # Logs
 *.log
+
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+scratch/test_output.pdf
