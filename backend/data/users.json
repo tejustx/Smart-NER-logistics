@@ -1,20 +1,5 @@
 [
   {
-    "id": "usr_planner01",
-    "name": "Dr. Anamika Barman",
-    "email": "planner@nerlogistics.in",
-    "phone": "+91 94350-11223",
-    "role": "planner",
-    "organization": "NER Freight Control Hub, Guwahati",
-    "encrypted_password": "pbkdf2:sha256:100000$9036d1608545c3ef9fb13f08b0a17c8c$af9cdbf432688e6341de9ee85e80eef521293e9b388ad75c12fd3fae109fcb0a",
-    "status": "Active",
-    "created_at": "2026-09-05 13:20:59",
-    "last_login": "2026-10-27 17:25:41",
-    "username": "planner@nerlogistics.in",
-    "role_display": "planner",
-    "is_active": true
-  },
-  {
     "id": "usr_gov01",
     "name": "Col. Ranjit Gogoi (Retd.)",
     "email": "gov@nerlogistics.in",
@@ -1916,6 +1901,21 @@
     "created_at": "2026-10-27 16:10:32",
     "last_login": "2026-10-27 16:10:32",
     "username": "rajsh@gmail.com",
+    "role_display": "planner",
+    "is_active": true
+  },
+  {
+    "id": "usr_planner01",
+    "name": "Dr. Anamika Barman",
+    "email": "planner@nerlogistics.in",
+    "phone": "+91 94350-11223",
+    "role": "planner",
+    "organization": "NER Freight Control Hub, Guwahati",
+    "encrypted_password": "pbkdf2:sha256:100000$9036d1608545c3ef9fb13f08b0a17c8c$af9cdbf432688e6341de9ee85e80eef521293e9b388ad75c12fd3fae109fcb0a",
+    "status": "Active",
+    "created_at": "2026-09-05 13:20:59",
+    "last_login": "2026-10-27 22:50:48",
+    "username": "planner@nerlogistics.in",
     "role_display": "planner",
     "is_active": true
   }

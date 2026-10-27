@@ -29,7 +29,7 @@ const appState = {
 };
 window.appState = appState;
 
-const API_BASE = ""; // Relative path to FastAPI backend
+const API_BASE = "https://smart-ner-logistics.onrender.com";
 
 // Toast Helper
 function showToast(message, type = "info") {

@@ -13,6 +13,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Immediate Theme Initialization & Instant Switch Sync -->
   <script>
+    const API_BASE = "https://smart-ner-logistics.onrender.com";
     (function() {
       var savedTheme = localStorage.getItem('smart_ner_theme') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
@@ -175,7 +176,7 @@
       }
 
       try {
-        var res = await fetch("/api/auth/login", {
+        var res = await fetch(API_BASE + "/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: email, password: password })
@@ -269,7 +270,7 @@
       }
 
       try {
-        var res = await fetch("/api/auth/signup", {
+        var res = await fetch(API_BASE + "/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
